@@ -1,11 +1,8 @@
-import datetime
-from enum import Enum
-
 from fastapi import FastAPI, HTTPException, Path, Body, Depends
 from sqlalchemy.orm import Session
 from models import create_db, SessionLocal, Task
-from pydantic import BaseModel
 
+from src.schemas import NewTaskInfo, UpdatedTaskInfo
 
 app = FastAPI()
 
@@ -15,22 +12,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-class Status(str, Enum):
-    not_yet = "未着手"
-    in_progress = "進行中"
-    done = "完了"
-
-class NewTaskInfo(BaseModel):
-    task_name: str
-    registration_date: datetime.date
-    deadline_date: datetime.date
-    status: Status
-
-class UpdatedTaskInfo(BaseModel):
-    task_name: str
-    deadline_date: datetime.date
-    status: Status
 
 @app.post('/tasks', response_model=NewTaskInfo)
 def create_task(task: NewTaskInfo, db: Session = Depends(get_db)):
