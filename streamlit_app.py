@@ -32,7 +32,8 @@ def delete_task(id):
 
 
 def task_form(task=None):
-    with st.form("task_form"):
+    form_key = f"task_form_{task['id']}" if task is not None else "new_task_form"
+    with st.form(key=form_key):
         task_name = st.text_input("タスク名", value='' if task is None else task["task_name"])
         registration_date = datetime.today().strftime("%Y-%m-%d")
         deadline_date = st.date_input("期限日", value=datetime.now() if task is None else datetime.strptime(task["deadline_date"], '%Y-%m-%d'))
