@@ -11,28 +11,25 @@ API_URL = 'http://127.0.0.1:8000/tasks'
 def list_tasks():
     response = requests.get(url=API_URL)
     data = response.json()
-    print("API Response: ", data)
     if not data:
         return pd.DataFrame()
     return pd.DataFrame(data)
 
 def create_task(task_data):
-    response = requests.post(
+    requests.post(
         url=API_URL,
         json=task_data
     )
-    return response.json()
 
 def update_task(id, task_data):
-    response = requests.put(
+    requests.put(
         url=f'{API_URL}/{id}',
         json=task_data
     )
-    return response.json()
 
 def delete_task(id):
-    response = requests.delete(url=f'{API_URL}/{id}')
-    return response.json()
+    requests.delete(url=f'{API_URL}/{id}')
+
 
 def task_form(task=None):
     with st.form("task_form"):
@@ -49,7 +46,6 @@ def task_form(task=None):
                 "deadline_date": deadline_date.strftime('%Y-%m-%d'),
                 "status": status
             }
-            print("Sending Data:", task_data)
             if task is None:
                 create_task(task_data=task_data)
             else:
@@ -59,15 +55,18 @@ def task_form(task=None):
 if __name__ == "__main__":
     tasks = list_tasks()
     if not tasks.empty:
-        st.write("タスク一覧", tasks)
+        st.subheader("タスク一覧")
+        st.write(tasks)
     else:
         st.write("タスク一覧", "現在登録されているタスクはありません。")
 
+    st.subheader("新規タスク登録")
     task_form()
 
-    for index, task in tasks.iterrows():
-        col1, col2, col3 = st.columns([1, 1, 8])
-        if col1.button("編集", key=f'edit-{index}'):
-            task_form(task=task)
-        if col2.button("削除", key=f'delete-{index}'):
-            delete_task(task["id"])
+    if not tasks.empty:
+        for index, task in tasks.iterrows():
+            col1, col2, col3 = st.columns([1, 1, 8])
+            if col1.button("編集", key=f'edit-{index}'):
+                task_form(task=task)
+            if col2.button("削除", key=f'delete-{index}'):
+                delete_task(task["id"])
