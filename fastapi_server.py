@@ -21,19 +21,19 @@ class Status(str, Enum):
     in_progress = "進行中"
     done = "完了"
 
-class TaskCreate(BaseModel):
+class NewTaskInfo(BaseModel):
     task_name: str
     registration_date: datetime.date
     deadline_date: datetime.date
     status: Status
 
-class TaskUpdate(BaseModel):
+class UpdatedTaskInfo(BaseModel):
     task_name: str
     deadline_date: datetime.date
     status: Status
 
-@app.post('/tasks', response_model=TaskCreate)
-def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+@app.post('/tasks', response_model=NewTaskInfo)
+def create_task(task: NewTaskInfo, db: Session = Depends(get_db)):
     db_task = Task(**task.model_dump())
     db.add(db_task)
     db.commit()
@@ -45,8 +45,8 @@ def get_tasks(db: Session = Depends(get_db)):
     tasks = db.query(Task).all()
     return tasks
 
-@app.put('/tasks/{id}', response_model=TaskUpdate)
-def update_task(id: int, task: TaskUpdate, db: Session = Depends(get_db)):
+@app.put('/tasks/{id}', response_model=UpdatedTaskInfo)
+def update_task(id: int, task: UpdatedTaskInfo, db: Session = Depends(get_db)):
     db_task = db.query(Task).filter(Task.id == id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail='Task not found')
