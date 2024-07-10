@@ -36,7 +36,7 @@ def task_form(task=None):
         task_name = st.text_input("タスク名", value='' if task is None else task["task_name"])
         registration_date = datetime.today().strftime("%Y-%m-%d")
         deadline_date = st.date_input("期限日", value=datetime.now() if task is None else datetime.strptime(task["deadline_date"], '%Y-%m-%d'))
-        status = st.selectbox("タスクの状況を入力してください。", options=["未着手", "作業中", "完了"], index=0 if task is None else ["未着手", "作業中", "完了"].index(task["status"]))
+        status = st.selectbox("タスクの状況を入力してください。", options=["未着手", "進行中", "完了"], index=0 if task is None else ["未着手", "進行中", "完了"].index(task["status"]))
 
         submit_button = st.form_submit_button("登録" if task is None else "更新")
         if submit_button:
