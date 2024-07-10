@@ -16,20 +16,22 @@ def list_tasks():
     return pd.DataFrame(data)
 
 def create_task(task_data):
-    requests.post(
+    response = requests.post(
         url=API_URL,
         json=task_data
     )
+    st.rerun()
 
 def update_task(id, task_data):
-    requests.put(
+    response = requests.put(
         url=f'{API_URL}/{id}',
         json=task_data
     )
+    st.rerun()
 
 def delete_task(id):
-    requests.delete(url=f'{API_URL}/{id}')
-
+    response = requests.delete(url=f'{API_URL}/{id}')
+    st.rerun()
 
 def task_form(task=None):
     form_key = f"task_form_{task['id']}" if task is not None else "new_task_form"
