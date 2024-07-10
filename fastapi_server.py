@@ -20,7 +20,7 @@ def create_task(task: NewTaskInfo, db: Session = Depends(get_db)):
     task_manager = TaskManager(db)
     return task_manager.create_task(task=task)
 
-@app.get('/tasks/')
+@app.get('/tasks')
 def get_tasks(db: Session = Depends(get_db)):
     task_manager = TaskManager(db)
     return task_manager.get_tasks()
