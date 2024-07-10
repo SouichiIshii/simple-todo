@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 
 from fastapi import FastAPI, HTTPException, Path, Body, Depends
 from sqlalchemy.orm import Session
@@ -15,16 +16,21 @@ def get_db():
     finally:
         db.close()
 
+class Status(str, Enum):
+    not_yet = "未着手"
+    in_progress = "進行中"
+    done = "完了"
+
 class TaskCreate(BaseModel):
     task_name: str
     registration_date: datetime.date
     deadline_date: datetime.date
-    status: str
+    status: Status
 
 class TaskUpdate(BaseModel):
     task_name: str
     deadline_date: datetime.date
-    status: str
+    status: Status
 
 @app.post('/tasks', response_model=TaskCreate)
 def create_task(task: TaskCreate, db: Session = Depends(get_db)):
