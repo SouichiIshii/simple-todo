@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Path, Body, Depends
 from sqlalchemy.orm import Session
-from models import create_db, SessionLocal, Task
+from src.models import create_db, SessionLocal, Task
 
 from src.schemas import NewTaskInfo, UpdatedTaskInfo
 
