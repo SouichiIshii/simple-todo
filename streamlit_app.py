@@ -8,7 +8,7 @@ import requests
 API_URL = 'http://127.0.0.1:8000/tasks'
 
 
-@st.cache(allow_output_mutation=True, show_spinner=False)
+@st.cache_data
 def get_tasks():
     response = requests.get(API_URL)
     return pd.DataFrame(response.json()) if response.ok else pd.DataFrame()
@@ -73,6 +73,7 @@ if __name__ == "__main__":
     if st.session_state.reload:
         display_tasks()
         if st.button("Refresh"):
+            st.cache_data.clear()
             st.rerun()
 
     with st.expander("新規タスクを登録"):
